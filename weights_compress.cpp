@@ -13,10 +13,108 @@
 
 using namespace std;
 
-//   kmeans_cluster  (   new[]  ,  new[]        ,    weights(float32), weights.size,    1,   conv:6 | fc:2 ,  nullptr,  1000 )
-void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
+#define QUAN_DEBUG
+#define KMEANS_DEBUG
+
+void quantize_buffer_cpp(const float *src, int8_t *dst, int count,int *scale_diff)
 {
+#ifdef QUAN_DEBUG
+    printf("[quantize] count:%d\n",count);
+    printf("[quantize] float src:\t");
+    for (int i = 0; i < count; ++i) {
+        //printf("%f\t",src[i]);
+//        if(isnan(src[i]))
+//        {
+//            printf("\nisnan:%f\n",src[i]);
+//        }
+    }
+    printf("\n");
+#endif
+
+    // Do quantization
+    // only handle float buffer as src and int8_t as dst
+    float max_abs = numeric_limits<float>::min();
+    float min_abs = numeric_limits<float>::max();
+    *scale_diff = 0;
+
+    for (int i = 0; i < count; ++i) {
+        //if(isnan(src[i])){continue;}
+
+        max_abs = std::max(max_abs, std::abs(src[i]));
+        min_abs = std::min(min_abs, std::abs(src[i]));
+
+#ifdef QUAN_DEBUG
+        //printf("currently compare %f\tmax:%f\tmin:%f\n",src[i],max_abs,min_abs);
+#endif
+
+    }
+    // Seems useless
+    //*scale_diff = (int)std::ceil(log2f(max_abs)) - (int)std::ceil(log2f(min_abs));
+
+
+
+
+    float scale_ = 8*sizeof(int8_t) - ((int)std::ceil(log2f(max_abs)) + 1);
+    float pow2_scale = std::pow(2, scale_);
+
+#ifdef QUAN_DEBUG
+    printf("max:%f\tmin:%f\tdiff:%d\n",max_abs,min_abs,*scale_diff);
+    //printf("max:%d\tmin:%d\tdiff:%d\n",(int)std::ceil(log2f(max_abs)),(int)std::ceil(log2f(min_abs)),*scale_diff);
+    printf("scale:%f\tpow2_scale:%f\n",scale_,pow2_scale);
+#endif
+
+    memset(dst,0,sizeof(int8_t)*count);
+
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int i = 0; i < count; ++i) {
+        //if(isnan(src[i])){continue;}
+        dst[i] = (int8_t)std::round(src[i]*pow2_scale);
+
+#ifdef QUAN_DEBUG
+        //printf("i:%d\tsrc[i]:%f\tdst[i]:%d\n",i,src[i],dst[i]);
+#endif
+    }
+    *scale_diff=(int)scale_;
+}
+
+void dequantize_buffer_cpp(const int8_t *src, float *dst, int count,const int scale_diff)
+{
+    // Do de-quantization
+    // only handle int8_t as src and float as dst
+    int8_t max_abs = numeric_limits<int8_t>::min();
+    int8_t min_abs = numeric_limits<int8_t>::max();
+
+    for (size_t i = 0; i < count; ++i) {
+        max_abs = std::max(max_abs, static_cast<int8_t>(std::abs(src[i])));
+        min_abs = std::min(min_abs,  static_cast<int8_t>(std::abs(src[i])));
+    }
+
+
+
+float scale_ = scale_diff;
+
+
+    float pow2_scale = std::pow(2, scale_);
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int i = 0; i < count; ++i) {
+        dst[i] = (float)src[i];
+        dst[i] /= pow2_scale;
+    }
+#ifdef QUAN_DEBUG
+        printf("[de_]count:%d\n",count);
+#endif
+}
+
+//   kmeans_cluster  (   new[]  ,  new[]        ,    weights(float32), weights.size,    1,   conv:6 | fc:2 ,  nullptr,  1000 )
+void kmeans_cluster(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
+{
+#ifdef KMEANS_DEBUG
         printf("Kmeans iteration:\t%d\n",max_iter);
+#endif
 	// get threads number from the env variable
 	int tSize;
 	if (const char* env_omp_tnum = getenv("OMP_NUM_THREADS"))
@@ -27,6 +125,10 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 	// generate initial centroids
 	float max_global=numeric_limits<float>::min(), min_global=numeric_limits<float>::max();
 	float max_private[tSize], min_private[tSize];
+
+    float *cCentro=new float[nCluster*nDimension];
+    memset(cCentro,0,sizeof(float)*nCluster*nDimension);
+
 	if (cInitCentro != nullptr)
 		memcpy(cCentro, cInitCentro, sizeof(float)*nCluster*nDimension);
 	else
@@ -50,12 +152,14 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 			min_global = (min_global > min_private[i]) ? min_private[i] : min_global;
 		}
 		cInitCentro = new float[nCluster];
+#ifdef KMEANS_DEBUG
 		printf("nCluster:\t%d,\tcCentro:\t",nCluster);
 		for (int k=0; k<nCluster; k++){
 			cCentro[k] = min_global + (max_global-min_global)*k/(nCluster-1);
 			printf("%f\t",cCentro[k]);
 		}
 		printf("\n");
+#endif
 	}
 
 	const float float_max = numeric_limits<float>::max();
@@ -79,12 +183,14 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 	{
 		// check convergence
         if (fabs(mPreDistance-mCurDistance)/mPreDistance < 0.01) {
+#ifdef KMEANS_DEBUG
 		printf("break at %d iteration\n",iter);
-                printf("nCluster:\t%d,\tfinal cCentro:\t",nCluster);
+        printf("nCluster:\t%d,\tfinal cCentro:\t",nCluster);
 		for (int k=0; k<nCluster; k++){
 			printf("%f\t",cCentro[k]);
 		}
 		printf("\n");
+#endif
                 break;
         }
 
@@ -169,6 +275,11 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 	//for(int n=0; n<nNode; n++)
 	//    cNodes[n] = cCentro[cLabel[n]];
 
+#ifdef QUAN_DEBUG
+    printf("pass in quantize nCluster:%d\n",nCluster);
+#endif
+
+
 	delete [] cDistance;
 	delete [] cClusterSize;
 	delete [] pClusterSize;
@@ -176,69 +287,6 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 
 }
 
-    void quantize_buffer(const float *src, int8_t *dst, size_t count)
-    {
-        // Do quantization
-        // only handle float buffer as src and int8_t as dst
-        float max_abs = 0.;
-        float min_abs = 0.;
-        int scale_diff = 0;
-
-        for (size_t i = 0; i < count; ++i) {
-            max_abs = std::max(max_abs, std::abs(src[i]));
-            min_abs = std::min(min_abs, std::abs(src[i]));
-        }
-
-        scale_diff = (int)std::ceil(log2f(max_abs)) - (int)std::ceil(log2f(min_abs));
-        if (scale_diff > sizeof(int8_t)*2) {
-		printf("Data is NOT suitable for Quantization\n");
-            return ;
-        }
-
-        float scale_ = 8*sizeof(int8_t) - ((int)std::ceil(log2f(max_abs)) + 1);
-        float pow2_scale = std::pow(2, scale_);
-
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
-        for (size_t i = 0; i < count; ++i) {
-            dst[i] = (int8_t)std::round(src[i]*pow2_scale);
-        }
-
-    }
-
-    void dequantize_buffer(const int8_t *src, float *dst, size_t count)
-    {
-        // Do de-quantization
-        // only handle int8_t as src and float as dst
-       int8_t max_abs = 0.;
-        int8_t min_abs = 0.;
-        int scale_diff = 0;
-
-        for (size_t i = 0; i < count; ++i) {
-            max_abs = std::max(max_abs, static_cast<int8_t>(std::abs(src[i])));
-            min_abs = std::min(min_abs,  static_cast<int8_t>(std::abs(src[i])));
-        }
-
-        scale_diff = (int)std::ceil(log2f(max_abs)) - (int)std::ceil(log2f(min_abs));
-        if (scale_diff > sizeof(int8_t)*2) {
-                printf("Data is NOT suitable for Quantization\n");
-            return ;
-        }
-
- float scale_ = 8*sizeof(int8_t) - ((int)std::ceil(log2f(max_abs)) + 1);
-
-
-        float pow2_scale = std::pow(2, scale_);
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
-        for (size_t i = 0; i < count; ++i) {
-            dst[i] = (float)src[i];
-            dst[i] /= pow2_scale;
-        }
-
-    }
 
 
 
@@ -502,13 +550,33 @@ void decode_label(int *dcmprLabel, int *cmprLabel, int num, const int nbit)
 	}
 }
 
+void quantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * scale)
+{
+    const float *src=(const float *)PyArray_GETPTR1(pWeights,0);
+    int8_t * dst_py=(int8_t *)PyArray_GETPTR1(newWeights,0);
+    int *scale_=( int *)PyArray_GETPTR1(scale,0);
+
+    int8_t *dst=new int8_t[nWeight];
+    quantize_buffer_cpp(src,dst,nWeight,scale_);
+
+    memcpy(dst_py,dst,nWeight);
+}
+
+void dequantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * scale)
+{
+    const int8_t *src=(const int8_t *)PyArray_GETPTR1(pWeights,0);
+    float *dst=(float *)PyArray_GETPTR1(newWeights,0);
+    int *scale_=(int*)PyArray_GETPTR1(scale,0);
+    dequantize_buffer_cpp(src,dst,nWeight,*scale_);
+}
+
 void compress_layer_weights(PyObject *pComprsLabel, PyObject *pCodeBook, PyObject *pWeights, int nWeight, int nBit)
 {
 	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
-	float *cCodeBook = (float *) PyArray_GETPTR1(pCodeBook, 0);
+    int8_t *cCodeBook = (int8_t *) PyArray_GETPTR1(pCodeBook, 0);
 	int *cLabel = new int[nWeight];
 	int nCentroid = 1 << nBit;
-	float *cCentroid = new float[nCentroid];
+    int8_t *cCentroid = new int8_t[nCentroid];
 	int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
 
     kmeans_cluster(cLabel, cCentroid, cWeights, nWeight, 1, nCentroid, nullptr, 10000);
@@ -536,7 +604,7 @@ void quantize_layer_weights(PyObject *pWeights, int nWeight, int nBit)
 	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
 	int *cLabel = new int[nWeight];
 	int nCentroid = 1 << nBit;
-	float *cCentroid = new float[nCentroid];
+    int8_t *cCentroid = new int8_t[nCentroid];
 
     kmeans_cluster(cLabel, cCentroid, cWeights, nWeight, 1, nCentroid, nullptr, 10000);
 	//translate
