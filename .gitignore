@@ -1,9 +1,11 @@
 # Custom backup
-old
+local_backup_kmeans
 
 # Custom temp
-new
+local_backup_float32_to_int8
 
+*.pyc
+*.cxx
 
 # Prerequisites
 *.d
