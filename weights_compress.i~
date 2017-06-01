@@ -8,7 +8,7 @@
     void quantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * scale);
     void dequantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * scale);
     void quantize_buffer_maxmin(PyObject *pWeights, PyObject * newWeights, int nWeight, int nSeg, PyObject * maxmin);
-    void dequantize_buffer_maxmin(PyObject *pWeights, PyObject * newWeights, int nWeight, int nSeg,PyObject * maxmin);
+    void dequantize_buffer_maxmin(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * maxmin);
 %}
     #include <Python.h>
     #include "numpy/arrayobject.h"

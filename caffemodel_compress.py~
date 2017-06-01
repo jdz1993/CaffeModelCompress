@@ -292,7 +292,7 @@ def compress_alex():
 	print "Done"
 
 
-def compress_vgg_16():
+def compress_vgg():
 	LENET_PATH = "/home/intel/Downloads/caffe/models/default_vgg_16"
 
 	netmodel   = os.path.join(LENET_PATH, "train_val.prototxt")
@@ -317,35 +317,9 @@ def compress_vgg_16():
 	
 	print "Done"
 
-
-def compress_vgg_19():
-	LENET_PATH = "/home/intel/Downloads/caffe/models/vgg_19"
-
-	netmodel   = os.path.join(LENET_PATH, "vgg19_real.prototxt")
-	netweights = os.path.join(LENET_PATH, "vgg_19.caffemodel")
-	output = os.path.join(LENET_PATH,"vgg19zip.npz")
-
-
-	new_weights=os.path.join(LENET_PATH,"vgg19_xx.caffemodel")
-
-	Option = 1
-	if Option == 1:
-		caffe_model_compress(netmodel, netweights, output, 6, 2)
-		#caffe_model_compress(netmodel, netweights, output, 8, 8)
-		print "it seems that compress has finished"
-		caffe_model_decompress(netmodel, new_weights, output)
-	elif Option == 2:
-		caffe_model_compress_int8(netmodel, netweights, output, 6, 2)
-		caffe_model_decompress_int8(netmodel, new_weights, output)
-	elif Option == 3:
-		caffe_model_compress_maxmin(netmodel, netweights, output, 6, 2, True)
-		caffe_model_decompress_maxmin(netmodel, new_weights, output)
-	
-	print "Done"
-
 if __name__ == "__main__":
 	
-	compress_vgg_19()
+	
 
 #if __name__ == "__main__":
 #	

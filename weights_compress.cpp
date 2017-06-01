@@ -10,12 +10,15 @@
 #include <omp.h>
 //#include "KmDriver.h"
 
+#include <inttypes.h>
+
 
 using namespace std;
 
 #define QUAN_DEBUG
 #define KMEANS_DEBUG
 
+// float32 to int8
 void quantize_buffer_cpp(const float *src, int8_t *dst, int count,int *scale_diff)
 {
 #ifdef QUAN_DEBUG
@@ -109,8 +112,59 @@ float scale_ = scale_diff;
 #endif
 }
 
+void quantize_buffer_maxmin_cpp(const float *src, uint8_t *dst, int count, const int nSeg, float *maxmin)
+{
+    float max_abs = numeric_limits<float>::min();
+    float min_abs = numeric_limits<float>::max();
+
+    for (int i = 0; i < count; ++i) {
+        max_abs = std::max(max_abs, std::abs(src[i]));
+        min_abs = std::min(min_abs, std::abs(src[i]));
+    }
+#ifdef QUAN_DEBUG
+        //printf("\tmax:%f\tmin:%f\n",max_abs,min_abs);
+#endif
+
+    memset(dst,0,sizeof(uint8_t)*count);
+    float range=(max_abs-min_abs);
+
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int i = 0; i < count; ++i) {
+        if(src[i]==max_abs){
+            //cout<<"---------------I am max\n";
+            dst[i]=nSeg-1;
+        }
+        dst[i]=(uint8_t)((src[i]-min_abs)*(float)nSeg/range);
+        //std::cout << static_cast<uint16_t>(dst[i]) << std::endl;
+    }
+    maxmin[0]=max_abs;
+    maxmin[1]=min_abs;
+}
+
+void dequantize_buffer_maxmin_cpp(const uint8_t *src, float *dst, int count,const int nSeg,const float* maxmin)
+{
+    float range=(maxmin[0]-maxmin[1]);
+    float min=maxmin[1];
+
+    //cout<<"min:"<<maxmin[1]<<"\tmax:"<<maxmin[0]<<endl;
+
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int i = 0; i < count; ++i) {
+        dst[i]=min+((float)src[i]+0.5f)*range/(float)nSeg;
+        //cout<<dst[i]<<"\t";
+    }
+#ifdef QUAN_DEBUG
+        printf("[de_]count:%d\n",count);
+#endif
+}
+
+
 //   kmeans_cluster  (   new[]  ,  new[]        ,    weights(float32), weights.size,    1,   conv:6 | fc:2 ,  nullptr,  1000 )
-void kmeans_cluster(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
+void kmeans_cluster_dev(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
 {
 #ifdef KMEANS_DEBUG
         printf("Kmeans iteration:\t%d\n",max_iter);
@@ -287,10 +341,7 @@ void kmeans_cluster(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNode, 
 
 }
 
-
-
-
-void kmeans_cluster_origin(int *cLabel, float *cCentro, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
+void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
 { 
 	// get threads number from the env variable
 	int tSize;
@@ -445,6 +496,7 @@ void encode_label(int *cmprLabel, int *orgLabel, int num, const int nbit)
 		mask |= (mask << 1);
 	
 	const int ngroup = sizeof(int)*8 / nbit;
+    cout<<"nbit:\t"<<nbit<<"ngroup:\t"<<ngroup<<endl;
 
 	// proceed the main loop
 	#pragma omp parallel for
@@ -550,6 +602,7 @@ void decode_label(int *dcmprLabel, int *cmprLabel, int num, const int nbit)
 	}
 }
 
+// quantize: float32 to int8
 void quantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, PyObject * scale)
 {
     const float *src=(const float *)PyArray_GETPTR1(pWeights,0);
@@ -570,45 +623,96 @@ void dequantize_buffer(PyObject *pWeights, PyObject * newWeights, int nWeight, P
     dequantize_buffer_cpp(src,dst,nWeight,*scale_);
 }
 
+// quantize: maxmin
+void quantize_buffer_maxmin(PyObject *pWeights, PyObject * newWeights, int nWeight, int nSeg, PyObject * maxmin)
+{
+    const float *src=(const float *)PyArray_GETPTR1(pWeights,0);
+    uint8_t * dst_py=(uint8_t *)PyArray_GETPTR1(newWeights,0);
+    float *maxmin_=(float *)PyArray_GETPTR1(maxmin,0);
+
+    uint8_t *dst=new uint8_t[nWeight];
+    quantize_buffer_maxmin_cpp(src,dst,nWeight,nSeg,maxmin_);
+
+    memcpy(dst_py,dst,nWeight);
+}
+
+void dequantize_buffer_maxmin(PyObject *pWeights, PyObject * newWeights, int nWeight, int nSeg,PyObject * maxmin)
+{
+    const uint8_t *src=(const uint8_t *)PyArray_GETPTR1(pWeights,0);
+    float *dst=(float *)PyArray_GETPTR1(newWeights,0);
+    const float *maxmin_=(const float*)PyArray_GETPTR1(maxmin,0);
+    dequantize_buffer_maxmin_cpp(src,dst,nWeight,nSeg,maxmin_);
+}
+
 void compress_layer_weights(PyObject *pComprsLabel, PyObject *pCodeBook, PyObject *pWeights, int nWeight, int nBit)
 {
-	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
-    int8_t *cCodeBook = (int8_t *) PyArray_GETPTR1(pCodeBook, 0);
-	int *cLabel = new int[nWeight];
-	int nCentroid = 1 << nBit;
-    int8_t *cCentroid = new int8_t[nCentroid];
-	int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
+    float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
+    float *cCodeBook = (float *) PyArray_GETPTR1(pCodeBook, 0);
+    int *cLabel = new int[nWeight];
+    int nCentroid = 1 << nBit;
+    float *cCentroid = new float[nCentroid];
+    int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
 
     kmeans_cluster(cLabel, cCentroid, cWeights, nWeight, 1, nCentroid, nullptr, 10000);
-	memcpy(cCodeBook, cCentroid, nCentroid*sizeof(float));
-	encode_label(cCmprLabel, cLabel, nWeight, nBit);
+    memcpy(cCodeBook, cCentroid, nCentroid*sizeof(float));
+    encode_label(cCmprLabel, cLabel, nWeight, nBit);
 }
 
 void decompress_layer_weights(PyObject *pWeights, PyObject *pComprsLabel, PyObject *pCodeBook, int nWeight, int nBit)
 {
-	int nCentroid = 1 << nBit;
-	int *cLabel = new int[nWeight];
-	int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
-	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
-	float *cCodeBook = (float *) PyArray_GETPTR1(pCodeBook, 0);
+    int nCentroid = 1 << nBit;
+    int *cLabel = new int[nWeight];
+    int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
+    float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
+    float *cCodeBook = (float *) PyArray_GETPTR1(pCodeBook, 0);
 
-	decode_label(cLabel, cCmprLabel, nWeight, nBit);
-	//translate
-	#pragma omp parallel for
-	for(int n=0; n<nWeight; n++)
-		cWeights[n] = cCodeBook[cLabel[n]];
+    decode_label(cLabel, cCmprLabel, nWeight, nBit);
+    //translate
+    #pragma omp parallel for
+    for(int n=0; n<nWeight; n++)
+        cWeights[n] = cCodeBook[cLabel[n]];
 }
+
+
+//void compress_layer_weights(PyObject *pComprsLabel, PyObject *pCodeBook, PyObject *pWeights, int nWeight, int nBit)
+//{
+//	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
+//    int8_t *cCodeBook = (int8_t *) PyArray_GETPTR1(pCodeBook, 0);
+//	int *cLabel = new int[nWeight];
+//	int nCentroid = 1 << nBit;
+//    int8_t *cCentroid = new int8_t[nCentroid];
+//	int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
+
+//    kmeans_cluster(cLabel, cCentroid, cWeights, nWeight, 1, nCentroid, nullptr, 10000);
+//	memcpy(cCodeBook, cCentroid, nCentroid*sizeof(float));
+//	encode_label(cCmprLabel, cLabel, nWeight, nBit);
+//}
+
+//void decompress_layer_weights(PyObject *pWeights, PyObject *pComprsLabel, PyObject *pCodeBook, int nWeight, int nBit)
+//{
+//	int nCentroid = 1 << nBit;
+//	int *cLabel = new int[nWeight];
+//	int *cCmprLabel = (int *) PyArray_GETPTR1(pComprsLabel, 0);
+//	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
+//	float *cCodeBook = (float *) PyArray_GETPTR1(pCodeBook, 0);
+
+//	decode_label(cLabel, cCmprLabel, nWeight, nBit);
+//	//translate
+//	#pragma omp parallel for
+//	for(int n=0; n<nWeight; n++)
+//		cWeights[n] = cCodeBook[cLabel[n]];
+//}
 
 void quantize_layer_weights(PyObject *pWeights, int nWeight, int nBit)
 {
-	float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
-	int *cLabel = new int[nWeight];
-	int nCentroid = 1 << nBit;
-    int8_t *cCentroid = new int8_t[nCentroid];
+    float *cWeights = (float *) PyArray_GETPTR1(pWeights, 0);
+    int *cLabel = new int[nWeight];
+    int nCentroid = 1 << nBit;
+    float *cCentroid = new float[nCentroid];
 
     kmeans_cluster(cLabel, cCentroid, cWeights, nWeight, 1, nCentroid, nullptr, 10000);
-	//translate
-	#pragma omp parallel for
-	for(int n=0; n<nWeight; n++)
-		cWeights[n] = cCentroid[cLabel[n]];
+    //translate
+    #pragma omp parallel for
+    for(int n=0; n<nWeight; n++)
+        cWeights[n] = cCentroid[cLabel[n]];
 }
