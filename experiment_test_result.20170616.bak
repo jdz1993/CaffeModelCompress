@@ -1,0 +1,401 @@
+
+Test Round:  4   1
+8541642 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+22873782 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+25535114 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 13:21:16.662246 10016 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 13:22:16.782389 10908 caffe.cpp:350] accuracy = 0.4068
+vgg16_default:
+I0609 13:34:34.944892 11821 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 13:34:34.944900 11821 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 13:46:59.881136 22923 caffe.cpp:350] accuracy@1 = 0.5476
+I0609 13:46:59.881145 22923 caffe.cpp:350] accuracy@5 = 0.784
+vgg19_default:
+I0609 14:02:07.500241  1454 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 14:02:07.500249  1454 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 14:16:45.713280 15183 caffe.cpp:350] accuracy@1 = 0.5408
+I0609 14:16:45.713289 15183 caffe.cpp:350] accuracy@5 = 0.7844
+Test Round:  4   2
+15869410 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+38328014 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+40989346 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 14:20:16.000493 30683 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 14:21:14.668774 31564 caffe.cpp:350] accuracy = 0.5144
+vgg16_default:
+I0609 14:33:34.529949 32446 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 14:33:34.529956 32446 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 14:45:58.304100 10940 caffe.cpp:350] accuracy@1 = 0.624
+I0609 14:45:58.304108 10940 caffe.cpp:350] accuracy@5 = 0.8476
+vgg19_default:
+I0609 15:00:34.035506 22139 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 15:00:34.035514 22139 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 15:14:47.773097  2678 caffe.cpp:350] accuracy@1 = 0.6328
+I0609 15:14:47.773103  2678 caffe.cpp:350] accuracy@5 = 0.8416
+Test Round:  4   3
+24662754 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+56873114 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+59534446 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 15:19:45.998455 17050 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 15:20:45.431792 17976 caffe.cpp:350] accuracy = 0.5328
+vgg16_default:
+I0609 15:33:01.791363 18927 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 15:33:01.791370 18927 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 15:45:20.177168 29938 caffe.cpp:350] accuracy@1 = 0.6584
+I0609 15:45:20.177175 29938 caffe.cpp:350] accuracy@5 = 0.8664
+vgg19_default:
+I0609 16:00:00.408885  8420 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 16:00:00.408892  8420 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 16:15:12.519795 21520 caffe.cpp:350] accuracy@1 = 0.6424
+I0609 16:15:12.519804 21520 caffe.cpp:350] accuracy@5 = 0.8508
+Test Round:  4   4
+30525042 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+69236574 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+71897906 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 16:24:17.779522  9737 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 16:25:17.115628 10693 caffe.cpp:350] accuracy = 0.5336
+vgg16_default:
+I0609 16:37:38.720866 11543 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 16:37:38.720873 11543 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 16:50:00.692649 22749 caffe.cpp:350] accuracy@1 = 0.6636
+I0609 16:50:00.692659 22749 caffe.cpp:350] accuracy@5 = 0.8696
+vgg19_default:
+I0609 17:04:35.825436  1256 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 17:04:35.825443  1256 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 17:19:11.015605 14209 caffe.cpp:350] accuracy@1 = 0.6388
+I0609 17:19:11.015616 14209 caffe.cpp:350] accuracy@5 = 0.8472
+Test Round:  5   1
+8930746 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+25326358 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+28872618 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 17:23:17.998759 30163 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 17:24:19.280035 31143 caffe.cpp:350] accuracy = 0.4348
+vgg16_default:
+I0609 17:36:52.346649 32013 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 17:36:52.346657 32013 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 17:49:18.289391 10873 caffe.cpp:350] accuracy@1 = 0.5812
+I0609 17:49:18.289398 10873 caffe.cpp:350] accuracy@5 = 0.812
+vgg19_default:
+I0609 18:04:12.372020 22149 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 18:04:12.372028 22149 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 18:19:14.148051  3133 caffe.cpp:350] accuracy@1 = 0.5884
+I0609 18:19:14.148056  3133 caffe.cpp:350] accuracy@5 = 0.8236
+Test Round:  5   2
+16258514 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+40780590 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+44326850 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 18:24:28.193197 20635 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 18:25:29.694780 21693 caffe.cpp:350] accuracy = 0.5456
+vgg16_default:
+I0609 18:38:10.601102 22626 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 18:38:10.601111 22626 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 18:50:38.257450  1577 caffe.cpp:350] accuracy@1 = 0.6472
+I0609 18:50:38.257457  1577 caffe.cpp:350] accuracy@5 = 0.8604
+vgg19_default:
+I0609 19:05:26.380980 12812 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 19:05:26.380987 12812 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 19:20:23.949666 26274 caffe.cpp:350] accuracy@1 = 0.6636
+I0609 19:20:23.949676 26274 caffe.cpp:350] accuracy@5 = 0.8688
+Test Round:  5   3
+25051858 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+59325690 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+62871950 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 19:26:46.613845 12247 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 19:27:47.249898 13296 caffe.cpp:350] accuracy = 0.5556
+vgg16_default:
+I0609 19:40:26.093067 14232 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 19:40:26.093075 14232 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 19:53:01.915007 25756 caffe.cpp:350] accuracy@1 = 0.6736
+I0609 19:53:01.915014 25756 caffe.cpp:350] accuracy@5 = 0.8772
+vgg19_default:
+I0609 20:07:52.953444  4643 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 20:07:52.953462  4643 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 20:22:50.496708 18063 caffe.cpp:350] accuracy@1 = 0.676
+I0609 20:22:50.496717 18063 caffe.cpp:350] accuracy@5 = 0.8756
+Test Round:  5   4
+30914146 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+71689150 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+75235410 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 20:33:47.206553  8206 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 20:34:49.374315  9190 caffe.cpp:350] accuracy = 0.5616
+vgg16_default:
+I0609 20:47:28.317190 10148 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 20:47:28.317198 10148 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 21:00:00.692023 21653 caffe.cpp:350] accuracy@1 = 0.6764
+I0609 21:00:00.692029 21653 caffe.cpp:350] accuracy@5 = 0.8748
+vgg19_default:
+I0609 21:14:49.338618   458 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 21:14:49.338625   458 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 21:29:53.552739 13926 caffe.cpp:350] accuracy@1 = 0.674
+I0609 21:29:53.552747 13926 caffe.cpp:350] accuracy@5 = 0.8744
+Test Round:  6   1
+9242422 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+27289446 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+31543886 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 21:34:56.178779 31311 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 21:35:59.474262 32306 caffe.cpp:350] accuracy = 0.452
+vgg16_default:
+I0609 21:48:32.960283   789 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 21:48:32.960289   789 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 22:01:09.486863 12242 caffe.cpp:350] accuracy@1 = 0.5896
+I0609 22:01:09.486871 12242 caffe.cpp:350] accuracy@5 = 0.824
+vgg19_default:
+I0609 22:15:56.942893 23789 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 22:15:56.942900 23789 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 22:30:47.849874  4647 caffe.cpp:350] accuracy@1 = 0.5956
+I0609 22:30:47.849882  4647 caffe.cpp:350] accuracy@5 = 0.8284
+Test Round:  6   2
+16570190 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+42743678 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+46998118 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 22:36:31.998756 22618 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 22:37:33.606528 23564 caffe.cpp:350] accuracy = 0.5528
+vgg16_default:
+I0609 22:50:09.824941 24517 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 22:50:09.824949 24517 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 23:02:39.651162  3429 caffe.cpp:350] accuracy@1 = 0.6592
+I0609 23:02:39.651170  3429 caffe.cpp:350] accuracy@5 = 0.8608
+vgg19_default:
+I0609 23:17:32.925808 14796 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 23:17:32.925817 14796 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 23:32:37.828639 28287 caffe.cpp:350] accuracy@1 = 0.668
+I0609 23:32:37.828645 28287 caffe.cpp:350] accuracy@5 = 0.8728
+Test Round:  6   3
+25363534 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+61288778 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+65543218 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 23:39:56.889549 15348 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 23:41:07.232223 16348 caffe.cpp:350] accuracy = 0.5572
+vgg16_default:
+I0609 23:55:14.388566 17390 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 23:55:14.388571 17390 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 00:07:44.721669 30174 caffe.cpp:350] accuracy@1 = 0.68
+I0610 00:07:44.721678 30174 caffe.cpp:350] accuracy@5 = 0.8784
+vgg19_default:
+I0610 00:22:35.620491  8858 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 00:22:35.620499  8858 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 00:37:31.955808 22310 caffe.cpp:350] accuracy@1 = 0.68
+I0610 00:37:31.955818 22310 caffe.cpp:350] accuracy@5 = 0.8792
+Test Round:  6   4
+31225822 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+73652238 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+77906678 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 00:50:08.978518 13615 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 00:51:11.026911 14679 caffe.cpp:350] accuracy = 0.56
+vgg16_default:
+I0610 01:03:47.857257 15647 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 01:03:47.857265 15647 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 01:16:20.487171 27096 caffe.cpp:350] accuracy@1 = 0.6824
+I0610 01:16:20.487179 27096 caffe.cpp:350] accuracy@5 = 0.8804
+vgg19_default:
+I0610 01:31:42.828397  5907 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 01:31:42.828404  5907 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 01:46:41.452903 19808 caffe.cpp:350] accuracy@1 = 0.6808
+I0610 01:46:41.452910 19808 caffe.cpp:350] accuracy@5 = 0.8764
+Test Round:  7   1
+9710234 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+30234838 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+35551722 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 01:51:20.720268  4341 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 01:52:21.754647  5304 caffe.cpp:350] accuracy = 0.4564
+vgg16_default:
+I0610 02:04:58.686960  6395 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 02:04:58.686969  6395 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 02:17:36.557157 17759 caffe.cpp:350] accuracy@1 = 0.5976
+I0610 02:17:36.557164 17759 caffe.cpp:350] accuracy@5 = 0.8244
+vgg19_default:
+I0610 02:32:29.519850 29317 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 02:32:29.519858 29317 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 02:47:34.386430 10360 caffe.cpp:350] accuracy@1 = 0.6112
+I0610 02:47:34.386438 10360 caffe.cpp:350] accuracy@5 = 0.8376
+Test Round:  7   2
+17038002 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+45689070 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+51005954 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 02:52:49.259727 28010 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 02:53:52.585839 28966 caffe.cpp:350] accuracy = 0.5576
+vgg16_default:
+I0610 03:06:30.836184 29977 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 03:06:30.836189 29977 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 03:19:06.852888  8973 caffe.cpp:350] accuracy@1 = 0.6648
+I0610 03:19:06.852896  8973 caffe.cpp:350] accuracy@5 = 0.8628
+vgg19_default:
+I0610 03:34:31.246181 20455 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 03:34:31.246189 20455 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 03:49:33.299860  2020 caffe.cpp:350] accuracy@1 = 0.6708
+I0610 03:49:33.299868  2020 caffe.cpp:350] accuracy@5 = 0.8716
+Test Round:  7   3
+25831346 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+64234170 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+69551054 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 03:56:04.686162 20747 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 03:57:06.126792 21685 caffe.cpp:350] accuracy = 0.5628
+vgg16_default:
+I0610 04:09:49.625428 22726 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 04:09:49.625437 22726 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 04:22:24.987702  1767 caffe.cpp:350] accuracy@1 = 0.6856
+I0610 04:22:24.987709  1767 caffe.cpp:350] accuracy@5 = 0.8792
+vgg19_default:
+I0610 04:37:20.437979 13013 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 04:37:20.437988 13013 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 04:52:20.761855 26603 caffe.cpp:350] accuracy@1 = 0.6836
+I0610 04:52:20.761862 26603 caffe.cpp:350] accuracy@5 = 0.8784
+Test Round:  7   4
+31693634 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+76597630 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+81914514 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 05:03:23.971988 16690 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 05:04:27.667357 17751 caffe.cpp:350] accuracy = 0.5596
+vgg16_default:
+I0610 05:17:07.667815 18802 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 05:17:07.667824 18802 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 05:29:49.889056 30193 caffe.cpp:350] accuracy@1 = 0.6868
+I0610 05:29:49.889065 30193 caffe.cpp:350] accuracy@5 = 0.8808
+vgg19_default:
+I0610 05:44:59.164945  9289 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 05:44:59.164953  9289 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 06:00:01.187569 23080 caffe.cpp:350] accuracy@1 = 0.6828
+I0610 06:00:01.187577 23080 caffe.cpp:350] accuracy@5 = 0.8772
+Test Round:  8   1
+9712794 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+30241494 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+35559914 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 06:03:59.563843  7085 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 06:05:03.817934  8033 caffe.cpp:350] accuracy = 0.4624
+vgg16_default:
+I0610 06:17:38.420173  9096 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 06:17:38.420181  9096 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 06:30:09.251102 20492 caffe.cpp:350] accuracy@1 = 0.6088
+I0610 06:30:09.251109 20492 caffe.cpp:350] accuracy@5 = 0.8288
+vgg19_default:
+I0610 06:45:01.968792 31822 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 06:45:01.968802 31822 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 07:00:01.956414 12819 caffe.cpp:350] accuracy@1 = 0.6136
+I0610 07:00:01.956423 12819 caffe.cpp:350] accuracy@5 = 0.8372
+Test Round:  8   2
+17040562 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+45695726 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+51014146 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 07:03:41.622627 29000 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 07:04:43.419553 29963 caffe.cpp:350] accuracy = 0.5644
+vgg16_default:
+I0610 07:17:21.556185 30864 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 07:17:21.556193 30864 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 07:29:53.487501  9941 caffe.cpp:350] accuracy@1 = 0.6652
+I0610 07:29:53.487509  9941 caffe.cpp:350] accuracy@5 = 0.8664
+vgg19_default:
+I0610 07:45:02.136987 21275 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 07:45:02.136996 21275 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 08:00:00.974256  2752 caffe.cpp:350] accuracy@1 = 0.6692
+I0610 08:00:00.974262  2752 caffe.cpp:350] accuracy@5 = 0.874
+Test Round:  8   3
+25833906 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+64240826 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+69559246 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 08:05:41.442456 20935 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 08:06:44.409778 21893 caffe.cpp:350] accuracy = 0.564
+vgg16_default:
+I0610 08:19:15.533859 22929 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 08:19:15.533867 22929 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 08:31:50.664975  1766 caffe.cpp:350] accuracy@1 = 0.686
+I0610 08:31:50.664980  1766 caffe.cpp:350] accuracy@5 = 0.8812
+vgg19_default:
+I0610 08:46:45.391520 13181 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 08:46:45.391528 13181 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 09:01:43.086318 26770 caffe.cpp:350] accuracy@1 = 0.68
+I0610 09:01:43.086326 26770 caffe.cpp:350] accuracy@5 = 0.8812
+Test Round:  8   4
+31696194 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+76604286 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+81922706 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0610 09:11:32.353792 15886 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0610 09:12:33.253875 16788 caffe.cpp:350] accuracy = 0.5672
+vgg16_default:
+I0610 09:25:00.317147 17782 caffe.cpp:350] accuracy@1 = 0.6908
+I0610 09:25:00.317155 17782 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0610 09:37:46.048143 29023 caffe.cpp:350] accuracy@1 = 0.6912
+I0610 09:37:46.048152 29023 caffe.cpp:350] accuracy@5 = 0.8804
+vgg19_default:
+I0610 09:52:36.234751  8094 caffe.cpp:350] accuracy@1 = 0.6816
+I0610 09:52:36.234756  8094 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0610 10:07:10.924937 21372 caffe.cpp:350] accuracy@1 = 0.6792
+I0610 10:07:10.924945 21372 caffe.cpp:350] accuracy@5 = 0.88

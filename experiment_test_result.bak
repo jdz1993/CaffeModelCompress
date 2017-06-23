@@ -1,0 +1,20 @@
+Test Round:  6   2
+14356419 /home/eikan/dezhi/caffe/models/bvlc_alexnet/alexnetzip.npz
+42743678 /home/eikan/dezhi/caffe/models/default_vgg_16/vgg16zip.npz
+46998118 /home/eikan/dezhi/caffe/models/vgg_19/vgg19zip.npz
+alexnet_default:
+I0609 12:20:20.618947 19363 caffe.cpp:350] accuracy = 0.5672
+alexnet_compressed:
+I0609 12:21:20.456003 20311 caffe.cpp:350] accuracy = 0.5636
+vgg16_default:
+I0609 12:33:39.111011 21275 caffe.cpp:350] accuracy@1 = 0.6908
+I0609 12:33:39.111019 21275 caffe.cpp:350] accuracy@5 = 0.8832
+vgg16_default:
+I0609 12:46:21.770812 32398 caffe.cpp:350] accuracy@1 = 0.6592
+I0609 12:46:21.770817 32398 caffe.cpp:350] accuracy@5 = 0.8608
+vgg19_default:
+I0609 13:00:52.145656 11553 caffe.cpp:350] accuracy@1 = 0.6816
+I0609 13:00:52.145664 11553 caffe.cpp:350] accuracy@5 = 0.88
+vgg19_default:
+I0609 13:15:25.218884 24710 caffe.cpp:350] accuracy@1 = 0.668
+I0609 13:15:25.218893 24710 caffe.cpp:350] accuracy@5 = 0.8728

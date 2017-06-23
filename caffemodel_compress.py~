@@ -46,7 +46,7 @@ def caffe_model_compress_maxmin(model, weights, storefile, convbit=6, fcbit=2, u
 		xdict[name+'_bias'] = bais
 		xdict[name+'_scale']=scale
 		#print "python scale",scale
-
+	use_savez_compressed=False
 	if (use_savez_compressed):
 		np.savez_compressed(storefile, **xdict)
 	else:
@@ -136,6 +136,7 @@ def caffe_model_compress_int8(model, weights, storefile, convbit=6, fcbit=2, use
 		print "python scale",scale
 
 	#keep result into output file
+	use_savez_compressed = False
 	if (use_savez_compressed):
 		np.savez_compressed(storefile, **xdict)
 	else:
@@ -189,6 +190,16 @@ def caffe_model_compress(model, weights, storefile, convbit=6, fcbit=2, use_save
 	xdict = dict()
 	#version 1 ; bits of conv layer and bits of full-connected layer
 	xdict['compz_info'] = (1, int(convbit), int(fcbit))
+
+	bais_all=0
+	weights_all=0
+	weights_fc=0
+	weights_conv=0
+	
+	codebook_all=0
+	newlabel_all=0
+	newlabel_fc=0
+	newlabel_conv=0
 	
 	for item in net.params.items():
 		name, layer = item
@@ -202,16 +213,33 @@ def caffe_model_compress(model, weights, storefile, convbit=6, fcbit=2, use_save
 		#bits for conv and full-connected layer.
 		if "fc" in name:
 			nbit = int(fcbit)
+			weights_fc = weights_fc + weights.flatten().astype(np.float32).size
 		elif "conv" in name:
 			nbit = int(convbit)
+			weights_conv = weights_conv + weights.flatten().astype(np.float32).size
+
+		print "bais size:",bais.flatten().astype(np.float32).size
+		bais_all = bais_all + bais.flatten().astype(np.float32).size
+		print "weights size:",weights.flatten().astype(np.float32).size
+		weights_all = weights_all + weights.flatten().astype(np.float32).size
 
 		weights_vec = weights.flatten().astype(np.float32)
 		vec_length = weights_vec.size
 		#print "vec_length",vec_length
 		nelem = 32 / nbit
 		newlabel = np.empty(((vec_length+nelem-1)/nelem),dtype=np.int32) 
+		
+		if "fc" in name:
+			newlabel_fc = newlabel_fc + newlabel.size
+		elif "conv" in name:
+			newlabel_conv = newlabel_conv + newlabel.size
+		newlabel_all = newlabel_all + newlabel.size
+
+
 		#codebook_INT = np.empty((2**nbit),dtype=np.int8)
 		codebook = np.empty((2**nbit),dtype=np.float32)
+
+		codebook_all = codebook_all + codebook.size
 
 		#t_start = time.time()
 		wqtz.compress_layer_weights(newlabel, codebook, weights_vec, vec_length, nbit)
@@ -224,6 +252,17 @@ def caffe_model_compress(model, weights, storefile, convbit=6, fcbit=2, use_save
 
 	print "calculation is done."
 
+	print "bais_all:",bais_all*4
+	print "weights_all:",weights_all*4
+	print "weights_fc:",weights_fc*4
+	print "weights_conv:",weights_conv*4
+
+	print "codebook_all:",codebook_all*4
+	print "newlabel_all:",newlabel_all*4
+	print "newlabel_fc:",newlabel_fc*4
+	print "newlabel_conv:",newlabel_conv*4
+
+	use_savez_compressed=False
 	#keep result into output file
 	if (use_savez_compressed):
 		np.savez_compressed(storefile, **xdict)
@@ -266,7 +305,7 @@ def caffe_model_decompress(model, weights, loadfile):
 		net.params[name][1].data[...] = newbias[...]
 	net.save(weights)
 
-def compress_alex():
+def compress_alex(convbit=6, fcbit=2):
 	LENET_PATH = "/home/intel/Downloads/caffe/models/bvlc_alexnet"
 
 	netmodel   = os.path.join(LENET_PATH, "train_val.prototxt")
@@ -276,23 +315,23 @@ def compress_alex():
 
 	new_weights=os.path.join(LENET_PATH,"alexnet_xx.caffemodel")
 
-	Option = 1
+	Option = 3
 	if Option == 1:
-		caffe_model_compress(netmodel, netweights, output, 6, 2)
+		caffe_model_compress(netmodel, netweights, output, convbit, fcbit)
 		#caffe_model_compress(netmodel, netweights, output, 8, 8)
 		print "it seems that compress has finished"
 		caffe_model_decompress(netmodel, new_weights, output)
 	elif Option == 2:
-		caffe_model_compress_int8(netmodel, netweights, output, 6, 2)
+		caffe_model_compress_int8(netmodel, netweights, output, convbit, fcbit)
 		caffe_model_decompress_int8(netmodel, new_weights, output)
 	elif Option == 3:
-		caffe_model_compress_maxmin(netmodel, netweights, output, 6, 2, True)
+		caffe_model_compress_maxmin(netmodel, netweights, output, convbit, fcbit)
 		caffe_model_decompress_maxmin(netmodel, new_weights, output)
 	
 	print "Done"
 
 
-def compress_vgg():
+def compress_vgg_16(convbit=6, fcbit=2):
 	LENET_PATH = "/home/intel/Downloads/caffe/models/default_vgg_16"
 
 	netmodel   = os.path.join(LENET_PATH, "train_val.prototxt")
@@ -302,24 +341,56 @@ def compress_vgg():
 
 	new_weights=os.path.join(LENET_PATH,"vgg16_xx.caffemodel")
 
-	Option = 1
+	Option = 2
 	if Option == 1:
-		caffe_model_compress(netmodel, netweights, output, 6, 2)
+		caffe_model_compress(netmodel, netweights, output, convbit, fcbit)
 		#caffe_model_compress(netmodel, netweights, output, 8, 8)
 		print "it seems that compress has finished"
 		caffe_model_decompress(netmodel, new_weights, output)
 	elif Option == 2:
-		caffe_model_compress_int8(netmodel, netweights, output, 6, 2)
+		caffe_model_compress_int8(netmodel, netweights, output, convbit, fcbit)
 		caffe_model_decompress_int8(netmodel, new_weights, output)
 	elif Option == 3:
-		caffe_model_compress_maxmin(netmodel, netweights, output, 6, 2, True)
+		caffe_model_compress_maxmin(netmodel, netweights, output, convbit, fcbit)
 		caffe_model_decompress_maxmin(netmodel, new_weights, output)
 	
 	print "Done"
 
+
+def compress_vgg_19(convbit=6, fcbit=2):
+	LENET_PATH = "/home/intel/Downloads/caffe/models/vgg_19"
+
+	netmodel   = os.path.join(LENET_PATH, "vgg19_real.prototxt")
+	netweights = os.path.join(LENET_PATH, "vgg_19.caffemodel")
+	output = os.path.join(LENET_PATH,"vgg19zip.npz")
+
+
+	new_weights=os.path.join(LENET_PATH,"vgg19_xx.caffemodel")
+
+	Option = 2
+	if Option == 1:
+		caffe_model_compress(netmodel, netweights, output, convbit, fcbit)
+		#caffe_model_compress(netmodel, netweights, output, 8, 8)
+		print "it seems that compress has finished"
+		caffe_model_decompress(netmodel, new_weights, output)
+	elif Option == 2:
+		caffe_model_compress_int8(netmodel, netweights, output, convbit, fcbit)
+		caffe_model_decompress_int8(netmodel, new_weights, output)
+	elif Option == 3:
+		caffe_model_compress_maxmin(netmodel, netweights, output, convbit, fcbit)
+		caffe_model_decompress_maxmin(netmodel, new_weights, output)
+	
+	print "Done"
+
+def main(argv):
+	if len(argv)==2:
+		compress_vgg_16(argv[0],argv[1])
+	else:
+		compress_vgg_16()
+
 if __name__ == "__main__":
 	
-	
+	main(sys.argv[1:])
 
 #if __name__ == "__main__":
 #	

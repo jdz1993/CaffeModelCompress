@@ -166,6 +166,7 @@ void dequantize_buffer_maxmin_cpp(const uint8_t *src, float *dst, int count,cons
 //   kmeans_cluster  (   new[]  ,  new[]        ,    weights(float32), weights.size,    1,   conv:6 | fc:2 ,  nullptr,  1000 )
 void kmeans_cluster_dev(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
 {
+cout<<"kmeans dev\n";
 #ifdef KMEANS_DEBUG
         printf("Kmeans iteration:\t%d\n",max_iter);
 #endif
@@ -343,6 +344,7 @@ void kmeans_cluster_dev(int *cLabel, int8_t *cCentro_INT, float *cNodes, int nNo
 
 void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int nDimension, int nCluster, float *cInitCentro=nullptr, int max_iter=1000)
 { 
+cout<<"kmeans\n";
 	// get threads number from the env variable
 	int tSize;
 	if (const char* env_omp_tnum = getenv("OMP_NUM_THREADS"))
@@ -399,8 +401,38 @@ void kmeans_cluster(int *cLabel, float *cCentro, float *cNodes, int nNode, int n
 	// clustering
     while (iter < max_iter)
     {
+printf("iter:::::::::::%d\n",iter);
 		// check convergence
-	    if (fabs(mPreDistance-mCurDistance)/mPreDistance < 0.01) break;
+	    if (fabs(mPreDistance-mCurDistance)/mPreDistance < 0.01)
+		{
+			printf("nCluster:\t%d,\tfinal cCentro:\t",nCluster);
+			for (int k=0; k<nCluster; k++){
+                        	printf("%f\t",cCentro[k]);
+                	}
+                	printf("\n");
+			
+			float float_min_=numeric_limits<float>::min();
+			float * max_mindis=new float[nCluster];
+			for ( int i=0;i<nCluster;i++)
+			{
+				max_mindis[i]=float_min_;
+			}
+			for ( int i = 0; i < nNode;i++)
+			{
+				if(max_mindis[cLabel[i]]<cDistance[i])
+				{
+					max_mindis[cLabel[i]]=cDistance[i];
+				}
+			}
+			printf("radis:\n");
+			for(int i=0;i<nCluster;i++)
+			{
+				printf("%f\t",max_mindis[i]);
+			}
+			printf("\n");
+			delete[] max_mindis;
+			break;
+		}
 	    mPreDistance = mCurDistance;
 	    mCurDistance = 0.0;
 
@@ -496,7 +528,7 @@ void encode_label(int *cmprLabel, int *orgLabel, int num, const int nbit)
 		mask |= (mask << 1);
 	
 	const int ngroup = sizeof(int)*8 / nbit;
-    cout<<"nbit:\t"<<nbit<<"ngroup:\t"<<ngroup<<endl;
+    //cout<<"nbit:\t"<<nbit<<"ngroup:\t"<<ngroup<<endl;
 
 	// proceed the main loop
 	#pragma omp parallel for
